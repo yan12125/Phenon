@@ -1,4 +1,4 @@
-package test.Recorder;
+package phenon.com;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,9 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import phenon.com.R;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -38,12 +40,15 @@ public class MainActivity extends Activity
     SurfaceHolder holder;
     boolean recording = false;
     File f;
+    String username;
     
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Intent intent=getIntent();
+        username=intent.getStringExtra("username");
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -70,6 +75,9 @@ public class MainActivity extends Activity
                         public void run()
                         {
                             uploadFile(f);
+                            Intent returnIntent=new Intent();
+                            returnIntent.putExtra("result", 1);
+                            setResult(RESULT_OK,returnIntent);
                             finish(); // return to the last activity
                         }
                     }).start();
@@ -151,6 +159,7 @@ public class MainActivity extends Activity
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.addBinaryBody("video", file);
         builder.addTextBody("submit", "1");
+        builder.addTextBody("uploader", username);
         
         httppost.setEntity(builder.build());
          

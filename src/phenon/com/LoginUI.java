@@ -1,9 +1,11 @@
-package test.Recorder;
+package phenon.com;
 
+import phenon.com.R;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -225,7 +227,10 @@ public class LoginUI extends Activity {
             showProgress(false);
 
             if (success) {
-                finish();
+            	Intent intent;
+            	intent = new Intent(LoginUI.this, EntryUI.class);
+            	intent.putExtra("username", mEmail);
+                startActivity(intent);
             } else {
                 mPasswordView
                         .setError(getString(R.string.error_incorrect_password));
